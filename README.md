@@ -1,3 +1,3 @@
 # Heuristieken_project
 
-hallo
+hallo, mijn naam is KAY
