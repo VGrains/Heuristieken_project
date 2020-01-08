@@ -1,4 +1,4 @@
-import csv
+from astar import *
 
 
 def csv_reader():
@@ -7,7 +7,7 @@ def csv_reader():
     Returns the location of chips as a dictionary where the key is the chip and the value is a list of the coördinates.
     Returns the netlists as a nested list.
     """
-    with open("example_print.csv", "r") as csv:
+    with open("../data/example/example_print.csv", "r") as csv:
         chip_locations = []
         next(csv)
         
@@ -20,7 +20,7 @@ def csv_reader():
             location_dict[location[0]] = [int(location[1]), int(location[2])]
 
     # Load netlists data from csv files
-    with open("example_netlist.csv", "r") as csv:
+    with open("../data/example/example_netlist.csv", "r") as csv:
         chip_netlists = []
         next(csv)
         
@@ -56,6 +56,12 @@ def main():
         coördinates_goal = location_dict[route[1]]
 
         print(manhattan_distance(coördinates_base[0], coördinates_goal[0], coördinates_base[1], coördinates_goal[1]))
+
+    start = (6, 2)
+    end = (3, 1)
+
+    path = astar(grid, start, end)
+    print(path)
     
 if __name__ == "__main__":
     main()
