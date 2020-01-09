@@ -112,6 +112,7 @@ def main():
         # Set the route as value in the final_routes dict, with the netlist as key
         final_routes[str(route)] = path
 
+    # Plot a visualisation of the chips and circuits
     plot_3dgraph(location_dict, final_routes)
     
 
