@@ -65,12 +65,19 @@ def astar(maze, start, end):
                 continue
 
             # Make sure walkable terrain
+            if node_position == end_node.position:
+                new_node = Node(current_node, node_position)
+            
+                # Append
+                children.append(new_node)
+                continue
+            
             if maze[node_position[0]][node_position[1]] != 0:
                 continue
 
             # Create new node
             new_node = Node(current_node, node_position)
-
+            
             # Append
             children.append(new_node)
 
@@ -102,8 +109,8 @@ def main():
             [0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 1, 0],
+            [0, 0, 1, 1, 1, 1, 0],
             [0, 0, 0, 0, 0, 0, 0]]
 
     start = (1, 5)
