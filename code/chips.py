@@ -68,6 +68,8 @@ def main():
 
         start = (coördinates_base[0], coördinates_base[1])
         end = (coördinates_goal[0], coördinates_goal[1])
+        print(start)
+        print(end)
         
         path = astar(grid, start, end)
         
@@ -90,21 +92,27 @@ def main():
 #             count += 1
         count_2 = 0
         
-        for net in created_nets:
-            if grid[net[0]][net[1]] == 0:
-                grid[net[0]][net[1]] = 1
-                count_2 += 1
+        for location in path:
+            location_1 = 7 - int(location[1]) - 1
+            location_0 = location[0]
+            if grid[location_1][location_0] == 0:
+                grid[location_1][location_0] = "1"
             else:
                 continue
+        #     location_1 = 7 - int(location[1]) - 1
+        #     print(location[1])
+        #     print(location_1)
+        #     if grid[location[0]][location_1] != 1:
+        #         grid[location[0]][location_1] = 1
+        #         count_2 += 1
         
-        count_1 += 1
+        # count_1 += 1
                 
-            
-        
     for x in grid:
         print(x)
     print('\n')
         
+    print("path")
     print(path)
     print(created_nets)
     print('\n')
