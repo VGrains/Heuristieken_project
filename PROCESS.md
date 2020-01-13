@@ -37,3 +37,4 @@
 - We hebben ontdekt dat er een bug zit in de code van het A* algoritme, waardoor de code soms vast blijft zitten in een loop en niet tot een oplossing komt. Dit vermoeden hadden we al, maar is vandaag bevestigd door een ander groepje dat dezelfde code gebruikte.
 - We lopen tegen het probleem aan dat een gate soms volledig wordt ingebouwd door nets van andere gates, waardoor het algoritme niet tot een oplossing kan komen.
     - We gaan proberen om de netlist anders te sorteren, om dit probleem op te lossen.
+- Door middel van 'pipreqs' hebben we requirements.txt bijgewerkt.
