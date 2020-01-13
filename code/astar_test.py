@@ -18,7 +18,7 @@ class Node():
 def csv_reader():
     """ 
     Loads the location of chips and the netlists from csv files
-    Returns the location of chips as a dictionary where the key is the chip and the value is a list of the coördinates.
+    Returns the location of chips as a dictionary where the key is the chip and the value is a list of the coordinates.
     Returns the netlists as a nested list.
     """
     
@@ -202,11 +202,11 @@ def main():
     count_1 = 0
 
     for route in chip_netlists:
-        coördinates_base = location_dict[route[0]]
-        coördinates_goal = location_dict[route[1]]
+        coordinates_base = location_dict[route[0]]
+        coordinates_goal = location_dict[route[1]]
 
-        start = (coördinates_base[0], coördinates_base[1])
-        end = (coördinates_goal[0], coördinates_goal[1])
+        start = (coordinates_base[0], coordinates_base[1])
+        end = (coordinates_goal[0], coordinates_goal[1])
         
         path = astar(grid, start, end)
         
