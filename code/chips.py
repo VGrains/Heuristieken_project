@@ -65,13 +65,15 @@ def main():
     for route in chip_netlists:
         coördinates_base = location_dict[route[0]]
         coördinates_goal = location_dict[route[1]]
+        print(f"route {route}")
 
         start = (coördinates_base[0], coördinates_base[1])
         end = (coördinates_goal[0], coördinates_goal[1])
-        print(start)
-        print(end)
+        print(f"start {start}")
+        print(f"end {end}")
         
         path = astar(grid, start, end)
+        print(f"path {path}")
         
         for coordinate in path:
             created_nets.append(coordinate)
@@ -108,9 +110,9 @@ def main():
         
         # count_1 += 1
                 
-    for x in grid:
-        print(x)
-    print('\n')
+        for x in grid:
+            print(x)
+        print('\n')
         
     print("path")
     print(path)
