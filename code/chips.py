@@ -10,7 +10,7 @@ def csv_reader():
     Returns the netlists as a nested list.
     """
     
-    with open("../data/example/example_print.csv", "r") as csv:
+    with open("../data/chip_1/print_1.csv", "r") as csv:
         chip_locations = []
         next(csv)
         
@@ -20,11 +20,11 @@ def csv_reader():
         location_dict = {}
         
         for location in chip_locations:
-            location_dict[location[0]] = [int(location[1]), int(location[2])]
+            location_dict[location[0]] = [0, int(location[1]), int(location[2])]
 
 
     # Load netlists data from csv files
-    with open("../data/example/example_netlist.csv", "r") as csv:
+    with open("../data/chip_1/netlist_1.csv", "r") as csv:
         chip_netlists = []
         next(csv)
         
@@ -37,10 +37,11 @@ def csv_reader():
 def init_grid(x_length, y_length):
     """ Initialises a 2 dimensional array the the location of chips for visualisation purposes """
     location_dict, _ = csv_reader()
-    grid = [[0 for x in range(x_length)] for y in range(y_length)]
-            
+    grid = [[[0 for x in range(x_length)] for y in range(y_length)] for z in range(7)]
+
+
     for location in location_dict:
-        grid[location_dict[location][0]][location_dict[location][1]] = location
+        grid[location_dict[location][0]][location_dict[location][1]][location_dict[location][2]] = 2
 
     return grid
 
@@ -59,11 +60,11 @@ def plot_3dgraph(chip_locations, routes):
     # Add the chips as points
     x = []
     y = []
-    z = [0, 0, 0, 0, 0]
     for i in chip_locations:
         x.append(chip_locations[i][0])
         y.append(chip_locations[i][1])
 
+    z = [0 for i in x]
     ax.scatter(x,y,z,s=75, c='r', marker='s')
 
     # Add the routes as wires
@@ -82,7 +83,7 @@ def plot_3dgraph(chip_locations, routes):
 
 def main():
     location_dict, chip_netlists = csv_reader()
-    grid = init_grid(8, 7)
+    grid = init_grid(25, 25)
     final_routes = {}
 
     # Calculate route between the two chips
@@ -93,28 +94,33 @@ def main():
         coördinates_goal = location_dict[route[1]]
 
         # Set the start and end chips
-        start = (coördinates_base[0], coördinates_base[1])
-        end = (coördinates_goal[0], coördinates_goal[1])
+        start = (coördinates_base[0], coördinates_base[1], coördinates_base[2])
+        end = (coördinates_goal[0], coördinates_goal[1], coördinates_goal[2])
 
+        print(start, end)
         # Calculate a path using the A-star algoritm
         path = astar(grid, start, end)
-
+        print(path)
         # Adjust the grid for the current iterations route
         for location in path:
             # If the position in the grid is a letter, don't make it a '1'
-            if grid[location[0]][location[1]] != 0 and grid[location[0]][location[1]] != 1:
+            if grid[location[0]][location[1]][location[2]] != 0 and grid[location[0]][location[1]][location[2]] != 1:
                 continue
 
             # Else change the zero to a '1'
             else:
-                grid[location[0]][location[1]] = 1
+                grid[location[0]][location[1]][location[2]] = 1
 
         # Set the route as value in the final_routes dict, with the netlist as key
         final_routes[str(route)] = path
 
     # Plot a visualisation of the chips and circuits
     plot_3dgraph(location_dict, final_routes)
-    
+
+    # ideal_score = sum(manhattan_distance(location_dict[route[0]][0], location_dict[route[1]][0], location_dict[route[0]][1], location_dict[route[1]][1]) for route in chip_netlists)
+    # current_score = sum(len(final_routes[route]) - 1 for route in final_routes)
+    # print(current_score)
+    # print(ideal_score)
 
 if __name__ == "__main__":
     main()
