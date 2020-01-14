@@ -93,10 +93,10 @@ def main():
     tuplelist = [(route[0], route[1]) for route in chip_netlists]
 
     for route in tuplelist:
-        coördinates_base = location_dict[route[0]]
-        coördinates_goal = location_dict[route[1]]
+        coordinates_base = location_dict[route[0]]
+        coordinates_goal = location_dict[route[1]]
 
-        min_md[route] = manhattan_distance(coördinates_base[1], coördinates_goal[1], coördinates_base[2], coördinates_goal[2])
+        min_md[route] = manhattan_distance(coordinates_base[1], coordinates_goal[1], coordinates_base[2], coordinates_goal[2])
 
     # Calculate the ideal circuit length by adding up all the manhattan distances
     ideal_score = sum(min_md[x] for x in min_md)
