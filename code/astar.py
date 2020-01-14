@@ -84,29 +84,39 @@ def astar(maze, start, end):
 
         # Loop through children
         for child in children:
-
             # Child is on the closed list
             for closed_child in closed_list:
                 if child == closed_child:
-                    continue
+                    break
+            else:
+                # Create the f, g, and h values
+                child.g = current_node.g + 1
+                # H: Manhattan distance to end point
+                child.h = abs(child.position[0] - end_node.position[0]) + abs(child.position[1] - end_node.position[1])
+                child.f = child.g + child.h
 
-            # Create the f, g, and h values
-            child.g = current_node.g + 1
-            child.h = ((child.position[0] - end_node.position[0]) ** 2) + ((child.position[1] - end_node.position[1]) ** 2)
-            child.f = child.g + child.h
-
-            # Child is already in the open list
-            for open_node in open_list:
-                if child == open_node and child.g > open_node.g:
-                    continue
-
-            # Add the child to the open list
-            open_list.append(child)
+                # Child is already in the open list
+                for open_node in open_list:
+                    # check if the new path to children is worst or equal 
+                    # than one already in the open_list (by measuring g)
+                    if child == open_node and child.g >= open_node.g:
+                        break
+                else:
+                    # Add the child to the open list
+                    open_list.append(child)
+            
 
 
 def main():
 
     maze = [[[0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [1, 1, 1, 1, 1, 1, 1],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0]],
+            [[0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0],
             [1, 1, 1, 1, 1, 1, 1],
             [0, 0, 0, 0, 0, 0, 0],
@@ -126,6 +136,7 @@ def main():
 
     path = astar(maze, start, end)
     print(path)
+
 
 
 if __name__ == '__main__':

@@ -10,7 +10,7 @@ def csv_reader():
     Returns the netlists as a nested list.
     """
     
-    with open("../data/chip_1/print_1.csv", "r") as csv:
+    with open("../data/example/example_print.csv", "r") as csv:
         chip_locations = []
         next(csv)
         
@@ -24,7 +24,7 @@ def csv_reader():
 
 
     # Load netlists data from csv files
-    with open("../data/chip_1/netlist_1.csv", "r") as csv:
+    with open("../data/example/example_netlist.csv", "r") as csv:
         chip_netlists = []
         next(csv)
         
@@ -39,8 +39,9 @@ def init_grid(x_length, y_length):
     location_dict, _ = csv_reader()
     grid = [[[0 for x in range(x_length)] for y in range(y_length)] for z in range(7)]
 
+
     for location in location_dict:
-        grid[location_dict[location][0]][location_dict[location][1]][location_dict[location][2]] = int(location)
+        grid[location_dict[location][0]][location_dict[location][1]][location_dict[location][2]] = location
 
     return grid
 
@@ -54,7 +55,7 @@ def manhattan_distance(x_base, x_goal, y_base, y_goal):
 def plot_3dgraph(chip_locations, routes):
     """ Creates an interactive 3d graph of the chips and circuits """
     fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
+    ax = fig.add_subplot()
     
     # Add the chips as points
     x = []
@@ -66,7 +67,7 @@ def plot_3dgraph(chip_locations, routes):
 
     z = [0 for i in x]
     
-    ax.scatter(x,y,z,s=75, c='r', marker='s')
+    ax.scatter(x,y,s=75, c='r', marker='s')
     
     # Add the routes as wires
     for x in routes:
@@ -78,43 +79,45 @@ def plot_3dgraph(chip_locations, routes):
             wires_y.append(y[2])
             wires_z.append(y[0])
 
-        ax.plot(wires_x, wires_y, wires_z)
-    
+        ax.plot(wires_x, wires_y)
     plt.yticks(np.arange(min(y), max(y), 1.0))
     plt.show()
 
+
 def main():
     location_dict, chip_netlists = csv_reader()
-    grid = init_grid(25, 25)
+    grid = init_grid(8, 7)
     final_routes = {}
     min_md = {}
-
     # Calculate route between the two chips
     tuplelist = [(route[0], route[1]) for route in chip_netlists]
+    print(tuplelist)
+
 
     for route in tuplelist:
         coördinates_base = location_dict[route[0]]
         coördinates_goal = location_dict[route[1]]
 
-        min_md[route] = manhattan_distance(coördinates_base[1], coördinates_goal[1], coördinates_base[2], coördinates_goal[2])
+        min_md[str(route)] = manhattan_distance(coördinates_base[1], coördinates_goal[1], coördinates_base[2], coördinates_goal[2])
 
-    # Calculate the ideal circuit length by adding up all the manhattan distances
-    ideal_score = sum(min_md[x] for x in min_md)
-
-    # Sort the routes by length
+    
+    ideal_net = sum(min_md[x] for x in min_md)
     min_md_sorted = {k: v for k, v in sorted(min_md.items(), key=lambda item: item[1])}
     smallest_routes_first = [x for x in min_md_sorted]
-
-    for route in smallest_routes_first:
+    print(chip_netlists)
+    for route in tuplelist:
 
         # Get the coördinates from the dictionary with the locations of the chips
+        # coördinates_base = location_dict[route[0]]
+        # coördinates_goal = location_dict[route[1]]
+
         coördinates_base = location_dict[route[0]]
         coördinates_goal = location_dict[route[1]]
 
         # Set the start and end chips
         start = (coördinates_base[0], coördinates_base[1], coördinates_base[2])
         end = (coördinates_goal[0], coördinates_goal[1], coördinates_goal[2])
-
+        print(start, end)
         # Calculate a path using the A-star algoritm
         path = astar(grid, start, end)
         
@@ -129,14 +132,16 @@ def main():
                 grid[location[0]][location[1]][location[2]] = 1
 
         # Set the route as value in the final_routes dict, with the netlist as key
-        final_routes[route] = path
+        final_routes[str(route)] = path
+
 
     # Plot a visualisation of the chips and circuits
     plot_3dgraph(location_dict, final_routes)
 
-    ideal_score = sum(manhattan_distance(location_dict[route[0]][0], location_dict[route[1]][0], location_dict[route[0]][1], location_dict[route[1]][1]) for route in chip_netlists)
-    current_score = sum(len(final_routes[route]) - 1 for route in final_routes)
-
+    # ideal_score = sum(manhattan_distance(location_dict[route[0]][0], location_dict[route[1]][0], location_dict[route[0]][1], location_dict[route[1]][1]) for route in chip_netlists)
+    # current_score = sum(len(final_routes[route]) - 1 for route in final_routes)
+    # print(current_score)
+    # print(ideal_score)
 
 if __name__ == "__main__":
     main()

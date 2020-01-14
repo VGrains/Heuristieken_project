@@ -106,10 +106,12 @@ def search(maze, cost, start, end):
     max_iterations = (len(maze) // 2) ** 10
     
     # Define a way to move
-    move = [[-1, 0], # Up
-            [0, -1], # Left
-            [1, 0], # Down
-            [0, 1]] # Right
+    move = [[0, -1, 0], # Up
+            [0, 0, -1], # Left
+            [0, 1, 0], # Down
+            [0, 0, 1],# Right
+            [1, 0, 0] # Up
+            [-1, 0, 0]] # Down
             
     
     # Find out how many rows and columns the maze
@@ -205,8 +207,8 @@ def main():
         coördinates_base = location_dict[route[0]]
         coördinates_goal = location_dict[route[1]]
 
-        start = (coördinates_base[0], coördinates_base[1])
-        end = (coördinates_goal[0], coördinates_goal[1])
+        start = (coördinates_base[0], coördinates_base[1], coördinates_base[2])
+        end = (coördinates_goal[0], coördinates_goal[1], coördinates_goal[2])
         
         path = astar(grid, start, end)
         
