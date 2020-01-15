@@ -54,5 +54,5 @@
         - Deze heuristiek zorgt voor een oplossing. Het is natuurlijk nog niet bekend of dit een goede oplossing is.
 
 <b> Woensdag 15 januari 2020 </b>
-- Een begin gemaakt aan het herschrijven van de code, in classes en functies.
+- Een begin gemaakt aan het herschrijven van de code in classes en functies.
 - Functies geschreven voor het schrijven van outputfiles.
