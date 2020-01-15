@@ -38,3 +38,21 @@
 - We lopen tegen het probleem aan dat een gate soms volledig wordt ingebouwd door nets van andere gates, waardoor het algoritme niet tot een oplossing kan komen.
     - We gaan proberen om de netlist anders te sorteren, om dit probleem op te lossen.
 - Door middel van 'pipreqs' hebben we requirements.txt bijgewerkt.
+
+<b> Dinsdag 14 januari 2020 </b>
+- 's Ochtends nog wat laatste dingen aangepast aan de presentatie.
+- Eerder liepen we aan tegen het probleem dat gates na een tijdje helemaal worden ingebouwd door wires, waardoor de netlist niet kan worden afgewerkt. 
+    - Heuristiek om het op te lossen: Netlist opnieuw sorteren na vastlopen. Route waar op vastgelopen wordt, verplaatsen naar de voorkant van de netlist.
+    - Algoritme:
+        - Open de netlist.
+        - Zoek op volgorde van boven naar beneden voor elke combinatie de snelste route tussen de gates d.m.v. A*.
+        - Wanneer een route is gevonden tussen twee punten, voeg deze toe aan de lijst met routes.
+        - Wanneer er geen route kan worden gevonden tussen twee gates:
+            - Maak de lijst met routes leeg.
+            - Plaats de combinatie van gates bovenaan de netlist en begin opnieuw.
+    - Resultaat: Succes
+        - Deze heuristiek zorgt voor een oplossing. Het is natuurlijk nog niet bekend of dit een goede oplossing is.
+
+<b> Woensdag 15 januari 2020 </b>
+- Een begin gemaakt aan het herschrijven van de code, in classes en functies.
+- Functies geschreven voor het schrijven van outputfiles.

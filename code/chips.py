@@ -2,6 +2,8 @@ from astar import astar
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
+import csv
+from csvwriter import *
 
 def csv_reader():
     """ 
@@ -154,7 +156,7 @@ def find_routes(tuplelist, location_dict, min_md, grid, final_routes, finished_r
 
 def main():
     location_dict, chip_netlists = csv_reader()
-    grid = init_grid(25, 25)
+    grid = init_grid(13, 18)
     final_routes = {}
     min_md = {}
 
@@ -167,15 +169,25 @@ def main():
 
     find_routes(tuplelist, location_dict, min_md, grid, final_routes, finished_routes)
     while len(finished_routes) < 30:
-        grid = init_grid(25, 25)
+        grid = init_grid(13, 18)
         find_routes(tuplelist, location_dict, min_md, grid, final_routes, finished_routes)
     # while restart:
     #     find_routes(tuplelist, location_dict, min_md, grid, final_routes, restart)
     print(f"finished routes: {finished_routes}")
     print(f"final routes: {final_routes}")
     print(f"final routes length: {len(final_routes)}")
+    for route in final_routes:
+        print(f"route: {route}")
+        print(f"length of route {len(final_routes[route])}")
+        for coordinate in final_routes[route]:
+            print(f"coordinate {coordinate}")
     print(f"new tuplelist check {tuplelist}")
     print("\n")
+    print(f"grid: {grid}")
+
+    # Save succesful netlist and final routes to csv files.
+    csv_writer_tuplelist(tuplelist)
+    csv_writer_finalroutes(final_routes)  
 
     # Plot a visualisation of the chips and circuits
     plot_3dgraph(location_dict, final_routes)
