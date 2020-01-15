@@ -24,7 +24,7 @@ def csv_reader():
 
 
     # Load netlists data from csv files
-    with open("../data/chip_1/netlist_1.csv", "r") as csv:
+    with open("../resultaten/chip_1_netlist_1_succes.csv", "r") as csv:
         chip_netlists = []
         next(csv)
         
@@ -81,7 +81,76 @@ def plot_3dgraph(chip_locations, routes):
         ax.plot(wires_x, wires_y, wires_z)
     
     plt.yticks(np.arange(min(y), max(y), 1.0))
+    plt.savefig('../resultaten/chip_1_circuit.png', bbox_inches='tight')
     plt.show()
+
+def find_routes(tuplelist, location_dict, min_md, grid, final_routes, finished_routes):
+    finished_routes = finished_routes
+    restart = True
+    while restart == True:
+        for route in tuplelist:
+            coordinates_base = location_dict[route[0]]
+            coordinates_goal = location_dict[route[1]]
+
+            min_md[route] = manhattan_distance(coordinates_base[1], coordinates_goal[1], coordinates_base[2], coordinates_goal[2])
+
+        # Calculate the ideal circuit length by adding up all the manhattan distances
+        ideal_score = sum(min_md[x] for x in min_md)
+
+        # Sort the routes by length
+        min_md_sorted = {k: v for k, v in sorted(min_md.items(), key=lambda item: item[1])}
+        smallest_routes_first = [x for x in min_md_sorted]
+        # print(f"smalles routes sorted: {smallest_routes_first}")
+
+        i = 1
+        for route in tuplelist:
+            # print(f"route {i}: {route}")
+            # # print(f"finished routes: {finished_routes}")
+            # print(f"finished routes: {len(finished_routes)}")
+            if len(finished_routes) == 30:
+                restart = False
+                return restart
+            i += 1
+
+            # Get the coordinates from the dictionary with the locations of the chips
+            coordinates_base = location_dict[route[0]]
+            coordinates_goal = location_dict[route[1]]
+
+            # Set the start and end chips
+            start = (coordinates_base[0], coordinates_base[1], coordinates_base[2])
+            end = (coordinates_goal[0], coordinates_goal[1], coordinates_goal[2])
+
+            # Calculate a path using the A-star algoritm
+            path = astar(grid, start, end)
+
+            if path == None:            
+                # Move the route that breaks the algorithm to the front of the routeslist
+                collision_route = route
+                tuplelist.remove(route)
+                tuplelist.insert(0, collision_route)
+            
+                final_routes.clear()
+                print(f"finished routes: {len(finished_routes)}")
+                finished_routes.clear()
+                restart == False
+                return restart
+            
+            # Adjust the grid for the current iterations route
+            for location in path:
+                # If the position in the grid is a letter, don't make it a '1'
+                if grid[location[0]][location[1]][location[2]] != 0 and grid[location[0]][location[1]][location[2]] != 1:
+                    continue
+
+                # Else change the zero to a '1'
+                else:
+                    grid[location[0]][location[1]][location[2]] = 1
+
+            # Set the route as value in the final_routes dict, with the netlist as key
+            final_routes[route] = path
+            finished_routes.append(route)
+
+
+
 
 def main():
     location_dict, chip_netlists = csv_reader()
@@ -91,45 +160,22 @@ def main():
 
     # Calculate route between the two chips
     tuplelist = [(route[0], route[1]) for route in chip_netlists]
+    print(f"tuplelist: {tuplelist}")
+    print(f"length tuplelist: {len(tuplelist)}")
 
-    for route in tuplelist:
-        coordinates_base = location_dict[route[0]]
-        coordinates_goal = location_dict[route[1]]
+    finished_routes = []
 
-        min_md[route] = manhattan_distance(coordinates_base[1], coordinates_goal[1], coordinates_base[2], coordinates_goal[2])
-
-    # Calculate the ideal circuit length by adding up all the manhattan distances
-    ideal_score = sum(min_md[x] for x in min_md)
-
-    # Sort the routes by length
-    min_md_sorted = {k: v for k, v in sorted(min_md.items(), key=lambda item: item[1])}
-    smallest_routes_first = [x for x in min_md_sorted]
-
-    for route in smallest_routes_first:
-
-        # Get the coordinates from the dictionary with the locations of the chips
-        coordinates_base = location_dict[route[0]]
-        coordinates_goal = location_dict[route[1]]
-
-        # Set the start and end chips
-        start = (coordinates_base[0], coordinates_base[1], coordinates_base[2])
-        end = (coordinates_goal[0], coordinates_goal[1], coordinates_goal[2])
-
-        # Calculate a path using the A-star algoritm
-        path = astar(grid, start, end)
-        
-        # Adjust the grid for the current iterations route
-        for location in path:
-            # If the position in the grid is a letter, don't make it a '1'
-            if grid[location[0]][location[1]][location[2]] != 0 and grid[location[0]][location[1]][location[2]] != 1:
-                continue
-
-            # Else change the zero to a '1'
-            else:
-                grid[location[0]][location[1]][location[2]] = 1
-
-        # Set the route as value in the final_routes dict, with the netlist as key
-        final_routes[route] = path
+    find_routes(tuplelist, location_dict, min_md, grid, final_routes, finished_routes)
+    while len(finished_routes) < 30:
+        grid = init_grid(25, 25)
+        find_routes(tuplelist, location_dict, min_md, grid, final_routes, finished_routes)
+    # while restart:
+    #     find_routes(tuplelist, location_dict, min_md, grid, final_routes, restart)
+    print(f"finished routes: {finished_routes}")
+    print(f"final routes: {final_routes}")
+    print(f"final routes length: {len(final_routes)}")
+    print(f"new tuplelist check {tuplelist}")
+    print("\n")
 
     # Plot a visualisation of the chips and circuits
     plot_3dgraph(location_dict, final_routes)
