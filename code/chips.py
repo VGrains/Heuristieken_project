@@ -7,10 +7,8 @@ from functions.csvwriter import *
 from functions.csvreader import *
 
 
-
-def init_grid(x_length, y_length):
+def init_grid(x_length, y_length, location_dict):
     """ Initialises a 2 dimensional array the the location of chips for visualisation purposes """
-    location_dict, _ = csv_reader()
     grid = [[[0 for x in range(x_length)] for y in range(y_length)] for z in range(7)]
 
     for location in location_dict:
@@ -24,6 +22,7 @@ def manhattan_distance(x_base, x_goal, y_base, y_goal):
     distance = abs(x_base - x_goal) + abs(y_base - y_goal)
     
     return distance
+
 
 def plot_3dgraph(chip_locations, routes):
     """ Creates an interactive 3d graph of the chips and circuits """
@@ -55,8 +54,11 @@ def plot_3dgraph(chip_locations, routes):
         ax.plot(wires_x, wires_y, wires_z)
     
     plt.yticks(np.arange(min(y), max(y), 1.0))
-    plt.savefig('../resultaten/chip_1_circuit.png', bbox_inches='tight')
+    outfilename = input("Enter filename for the output image: ")
+    outfilename = "../resultaten/{}.png".format(outfilename)
+    plt.savefig(outfilename, bbox_inches='tight')
     plt.show()
+
 
 def find_routes(tuplelist, location_dict, min_md, grid, final_routes, finished_routes):
     finished_routes = finished_routes
@@ -124,11 +126,9 @@ def find_routes(tuplelist, location_dict, min_md, grid, final_routes, finished_r
             finished_routes.append(route)
 
 
-
-
 def main():
     location_dict, chip_netlists = csv_reader()
-    grid = init_grid(13, 18)
+    grid = init_grid(13, 18, location_dict)
     final_routes = {}
     min_md = {}
 
@@ -141,20 +141,15 @@ def main():
 
     find_routes(tuplelist, location_dict, min_md, grid, final_routes, finished_routes)
     while len(finished_routes) < 30:
-        grid = init_grid(13, 18)
+        grid = init_grid(13, 18, location_dict)
         find_routes(tuplelist, location_dict, min_md, grid, final_routes, finished_routes)
     # while restart:
     #     find_routes(tuplelist, location_dict, min_md, grid, final_routes, restart)
     print(f"finished routes: {finished_routes}")
     print(f"final routes: {final_routes}")
-    print(f"final routes length: {len(final_routes)}")
     for route in final_routes:
-        print(f"route: {route}")
-        print(f"length of route {len(final_routes[route])}")
         for coordinate in final_routes[route]:
             print(f"coordinate {coordinate}")
-    print(f"new tuplelist check {tuplelist}")
-    print("\n")
     print(f"grid: {grid}")
 
     # Save succesful netlist and final routes to csv files.
