@@ -1,39 +1,11 @@
-from astar import astar
+from algoritmes.astar import astar
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 import csv
-from csvwriter import *
+from functions.csvwriter import *
+from functions.csvreader import *
 
-def csv_reader():
-    """ 
-    Loads the location of chips and the netlists from csv files
-    Returns the location of chips as a dictionary where the key is the chip and the value is a list of the coordinates.
-    Returns the netlists as a nested list.
-    """
-    
-    with open("../data/chip_1/print_1.csv", "r") as csv:
-        chip_locations = []
-        next(csv)
-        
-        for line in csv:
-            chip_locations.append(line.strip().split(", "))
-
-        location_dict = {}
-        
-        for location in chip_locations:
-            location_dict[location[0]] = [0, int(location[1]), int(location[2])]
-
-
-    # Load netlists data from csv files
-    with open("../resultaten/chip_1_netlist_1_succes.csv", "r") as csv:
-        chip_netlists = []
-        next(csv)
-        
-        for line in csv:
-            chip_netlists.append(line.strip().split(", "))
-        
-    return location_dict, chip_netlists
 
 
 def init_grid(x_length, y_length):
