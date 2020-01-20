@@ -5,6 +5,8 @@ import numpy as np
 import csv
 from functions.csvwriter import *
 from functions.csvreader import *
+import random
+import copy
 
 
 def init_grid(x_length, y_length, location_dict):
@@ -60,7 +62,7 @@ def plot_3dgraph(chip_locations, routes):
     plt.show()
 
 
-def find_routes(tuplelist, location_dict, min_md, grid, final_routes, finished_routes):
+def find_routes(tuplelist, location_dict, min_md, grid, final_routes, finished_routes, seen_routes):
     finished_routes = finished_routes
     restart = True
     while restart == True:
@@ -80,10 +82,7 @@ def find_routes(tuplelist, location_dict, min_md, grid, final_routes, finished_r
 
         i = 1
         for route in tuplelist:
-            # print(f"route {i}: {route}")
-            # # print(f"finished routes: {finished_routes}")
-            # print(f"finished routes: {len(finished_routes)}")
-            if len(finished_routes) == 30:
+            if len(finished_routes) == len(tuplelist):
                 restart = False
                 return restart
             i += 1
@@ -101,13 +100,24 @@ def find_routes(tuplelist, location_dict, min_md, grid, final_routes, finished_r
 
             if path == None:            
                 # Move the route that breaks the algorithm to the front of the routeslist
+                # print(f"tuplelist 1: {tuplelist}")
+                tuplelist_2 = copy.deepcopy(tuplelist)
+                seen_routes.append(tuplelist_2)
                 collision_route = route
                 tuplelist.remove(route)
                 tuplelist.insert(0, collision_route)
-            
+                # print(f"tuplelist 2: {tuplelist}")
+                # print(f"seen routes: {seen_routes}")
+
+                if tuplelist in seen_routes:
+                    random.shuffle(tuplelist)
+                    print("the tuplelist has been shuffled!")
+                    # print(f"shuffled tuplelist: {tuplelist}")
+                
                 final_routes.clear()
                 print(f"finished routes: {len(finished_routes)}")
                 finished_routes.clear()
+                
                 restart == False
                 return restart
             
@@ -129,6 +139,7 @@ def find_routes(tuplelist, location_dict, min_md, grid, final_routes, finished_r
 def main():
     location_dict, chip_netlists = csv_reader()
     grid = init_grid(13, 18, location_dict)
+    seen_routes = []
     final_routes = {}
     min_md = {}
 
@@ -139,17 +150,14 @@ def main():
 
     finished_routes = []
 
-    find_routes(tuplelist, location_dict, min_md, grid, final_routes, finished_routes)
-    while len(finished_routes) < 30:
+    find_routes(tuplelist, location_dict, min_md, grid, final_routes, finished_routes, seen_routes)
+    
+    while len(finished_routes) < len(tuplelist):
         grid = init_grid(13, 18, location_dict)
-        find_routes(tuplelist, location_dict, min_md, grid, final_routes, finished_routes)
-    # while restart:
-    #     find_routes(tuplelist, location_dict, min_md, grid, final_routes, restart)
+        find_routes(tuplelist, location_dict, min_md, grid, final_routes, finished_routes, seen_routes)
+    
     print(f"finished routes: {finished_routes}")
     print(f"final routes: {final_routes}")
-    for route in final_routes:
-        for coordinate in final_routes[route]:
-            print(f"coordinate {coordinate}")
     print(f"grid: {grid}")
 
     # Save succesful netlist and final routes to csv files.
