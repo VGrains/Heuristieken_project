@@ -83,3 +83,7 @@
 
 
 
+=======
+- Verder gegaan met het testen van de bedachte heuristiek (vooraan plaatsen van de route waar op wordt vastgelopen).
+    - Het blijkt dat dit niet altijd voor een oplossing zorgt. Netlist 2 en 3 kunnen hier niet mee opgelost worden (netlist 4 t/m 6 zijn niet geprobeerd). Dit komt doordat er een loop ontstaat van steeds dezelfde combinatie vooraan de netlist zetten. 
+>>>>>>> ee38d482e150ab72e002b434bbb1bb1547de37b2
