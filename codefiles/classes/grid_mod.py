@@ -1,6 +1,6 @@
 import csv
 
-class Grid():
+class Grid_mod():
     def __init__(self, gates_file):
         self.gates = self.load_gates(gates_file)
 
@@ -41,13 +41,18 @@ class Grid():
         
         for gate in self.gates:
             self.grid[self.gates[gate][0]][self.gates[gate][1]][self.gates[gate][2]] = int(gate)
+            
+            # Give neighbouring nodes an other value
+            self.grid[self.gates[gate][0]][self.gates[gate][1] + 1][self.gates[gate][2]] = 'x'
+            self.grid[self.gates[gate][0]][self.gates[gate][1] - 1][self.gates[gate][2]] = 'x'
+            self.grid[self.gates[gate][0]][self.gates[gate][1]][self.gates[gate][2] + 1] = 'x'
+            self.grid[self.gates[gate][0]][self.gates[gate][1]][self.gates[gate][2] - 1] = 'x'
+            self.grid[self.gates[gate][0] + 1][self.gates[gate][1]][self.gates[gate][2]] = 'x'
         
         return self.grid
 
-
     def __repr__(self):
         return self.grid
-         
 
          
          

@@ -42,6 +42,7 @@ def astar_grid(netlist, gate_locations, grid):
 #                 print("finished routes: ", len(final_routes))
 #                 final_routes.clear()
 #                 break
+
             if path == None:
                 return final_routes
     
