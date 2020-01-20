@@ -47,16 +47,16 @@ def astar_grid(netlist, gate_locations, grid):
             # Adjust the grid for the current iterations route
             for location in path:
                 # If the position in the grid is a letter, don't make it a '1'
-                if copy_grid[location[0]][location[1]][location[2]] != 0 and copy_grid[location[0]][location[1]][location[2]] != 1:
-                    continue
+                if copy_grid[location[0]][location[1]][location[2]] == 'x' or copy_grid[location[0]][location[1]][location[2]] == 0 or copy_grid[location[0]][location[1]][location[2]] == 1:
+                    copy_grid[location[0]][location[1]][location[2]] = 1
 
                 # Else change the zero to a '1'
                 else:
-                    copy_grid[location[0]][location[1]][location[2]] = 1
+                    continue
 
             # Set the route as value in the final_routes dict, with the netlist as key
             final_routes[route] = path
-            
+               
     return final_routes, copy_grid
 
 def astar(maze, start, end):
@@ -111,7 +111,6 @@ def astar(maze, start, end):
             if node_position[1] > (len(maze[0]) - 1) or node_position[1] < 0 or node_position[2] > (len(maze[0][len(maze)-1]) -1) or node_position[2] < 0 or node_position[0] < 0 or node_position[0] > len(maze) - 1:
                 continue
             
- 
             # Make sure walkable terrain
             if node_position == end_node.position:
                 new_node = Node(current_node, node_position)

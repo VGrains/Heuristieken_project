@@ -46,16 +46,4 @@ class Grid():
 
 
     def __repr__(self):
-        return self.grid
-         
-
-         
-         
-         
-         
-         
-         
-         
-         
-         
-         
+        return self.grid 
