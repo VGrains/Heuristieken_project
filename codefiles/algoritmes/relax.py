@@ -1,5 +1,6 @@
 import copy
 
+
 class Node():
     """A node class for A* Pathfinding"""
 
@@ -108,19 +109,7 @@ def astar(maze, start, end):
             # Make sure within range
             if node_position[1] > (len(maze[0]) - 1) or node_position[1] < 0 or node_position[2] > (len(maze[0][len(maze)-1]) -1) or node_position[2] < 0 or node_position[0] < 0 or node_position[0] > len(maze) - 1:
                 continue
-            
- 
-            # # Make sure walkable terrain
- #            if node_position == end_node.position:
- #                new_node = Node(current_node, node_position)
- #
- #                # Append
- #                children.append(new_node)
- #                continue
- #
-            # if maze[node_position[0]][node_position[1]][node_position[2]] != 0:
-#                 continue
-
+        
             # Create new node
             new_node = Node(current_node, node_position)
             
@@ -149,4 +138,31 @@ def astar(maze, start, end):
                 else:
                     # Add the child to the open list
                     open_list.append(child)
+
+def to_the_sky(route):
+
+    old_route = route
+    new_route = []
+    for x in old_route:
+        x = (x[0] + 1, x[1], x[2])
+        new_route.append(x)
+    
+    new_route.insert(0, old_route[0])
+    new_route.insert(len(new_route), old_route[-1])
+    
+    return new_route
+
+def calculate_collisions(routes):
+    collisions = {}
+    for x in routes:
+        collisions[x] = 0
+        for y in routes[x]:
+            for i in routes:
+                if y in routes[i]:
+                    collisions[x] += 1
+                
+    collisions_sorted = {k: v for k, v in reversed(sorted(collisions.items(), key=lambda item: item[1]))}
+
+    return collisions_sorted
+    
             

@@ -111,7 +111,6 @@ def astar(maze, start, end):
             if node_position[1] > (len(maze[0]) - 1) or node_position[1] < 0 or node_position[2] > (len(maze[0][len(maze)-1]) -1) or node_position[2] < 0 or node_position[0] < 0 or node_position[0] > len(maze) - 1:
                 continue
             
- 
             # Make sure walkable terrain
             if node_position == end_node.position:
                 new_node = Node(current_node, node_position)
