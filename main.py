@@ -1,10 +1,12 @@
-from codefiles.classes import grid_mod
+from codefiles.classes import grid, grid_mod
 from codefiles.functions import netlist, manhattan, plot
 from codefiles.algoritmes import astar, relax, neighbours
+import timeit
 
 
 if __name__ == '__main__':
     
+    start = timeit.default_timer()
     # Create a grid from our data
     obj = grid_mod.Grid_mod('data/chip_1/print_1.csv')
     grid = obj.__repr__()
@@ -28,9 +30,11 @@ if __name__ == '__main__':
     md_routes = {route:manhattan.manhattan_distance(gate_locations[route[0]][1], gate_locations[route[1]][1], gate_locations[route[0]][2], gate_locations[route[1]][2]) for route in netlist}
     min_md_sorted = {k: v for k, v in sorted(md_routes.items(), key=lambda item: item[1])}
     smallest_routes_first = [x for x in min_md_sorted]
-
-    print("ideal: ", ideal_score)
-    print("current: ", current_score)
+    stop = timeit.default_timer()
+    
+    print("Ideal: ", ideal_score)
+    print("Current: ", current_score)
+    print('Runtime: ', stop - start)
 
     plot.plot_3dgraph(gate_locations, routes)
 
