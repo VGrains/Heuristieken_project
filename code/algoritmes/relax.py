@@ -16,7 +16,7 @@ class Node():
         return self.position == other.position
 
 
-def astar_grid(netlist, gate_locations, grid):
+def relax(netlist, gate_locations, grid):
     final_routes = {}
     
     while len(final_routes) < 30:
@@ -34,17 +34,14 @@ def astar_grid(netlist, gate_locations, grid):
             # Calculate a path using the A-star algoritm
             path = astar(copy_grid, start, end)
 
-            # if path == None:
-#                 # Move the route that breaks the algorithm to the front of the routeslist
-#
-#                 netlist.remove(route)
-#                 netlist.insert(0, route)
-#                 print("finished routes: ", len(final_routes))
-#                 final_routes.clear()
-#                 break
+            if path == None:            
+                # Move the route that breaks the algorithm to the front of the routeslist
 
-            if path == None:
-                return final_routes
+                netlist.remove(route)
+                netlist.insert(0, route)
+                print("finished routes: ", len(final_routes))
+                final_routes.clear()
+                break
     
             # Adjust the grid for the current iterations route
             for location in path:
@@ -114,16 +111,16 @@ def astar(maze, start, end):
                 continue
             
  
-            # Make sure walkable terrain
-            if node_position == end_node.position:
-                new_node = Node(current_node, node_position)
-            
-                # Append
-                children.append(new_node)
-                continue
-            
-            if maze[node_position[0]][node_position[1]][node_position[2]] != 0:
-                continue
+            # # Make sure walkable terrain
+ #            if node_position == end_node.position:
+ #                new_node = Node(current_node, node_position)
+ #
+ #                # Append
+ #                children.append(new_node)
+ #                continue
+ #
+            # if maze[node_position[0]][node_position[1]][node_position[2]] != 0:
+#                 continue
 
             # Create new node
             new_node = Node(current_node, node_position)
@@ -154,38 +151,3 @@ def astar(maze, start, end):
                     # Add the child to the open list
                     open_list.append(child)
             
-
-def main():
-
-    maze = [[[0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [1, 1, 1, 1, 1, 1, 1],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0]],
-            [[0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [1, 1, 1, 1, 1, 1, 1],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0]],
-            [[0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0]]]
-
-    start = (0, 1, 5)
-    end = (0, 6, 5)
-
-    path = astar(maze, start, end)
-    print(path)
-
-
-
-if __name__ == '__main__':
-    main()
