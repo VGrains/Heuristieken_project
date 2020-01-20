@@ -1,6 +1,6 @@
-from classes import grid
-from functions import netlist, manhattan, plot
-from codefiles import astar, relax
+from codefiles.classes import grid
+from codefiles.functions import netlist, manhattan, plot
+from codefiles.algoritmes import astar, relax
 
 
 if __name__ == '__main__':

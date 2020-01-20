@@ -1,22 +1,23 @@
-from codefiles.classes import grid
+from codefiles.classes import grid_mod
 from codefiles.functions import netlist, manhattan, plot
-from codefiles.algoritmes import astar, relax
+from codefiles.algoritmes import astar, relax, neighbours
 
 
 if __name__ == '__main__':
     
     # Create a grid from our data
-    obj = grid.Grid('print_1.csv')
+    obj = grid_mod.Grid_mod('data/chip_1/print_1.csv')
     grid = obj.__repr__()
     
-    netlist = netlist.load_netlists('netlist_1.csv')
+    netlist = netlist.load_netlists('data/chip_1/netlist_1.csv')
     
     gate_locations = obj.gates
     
     print(gate_locations)
  
-    routes = astar.astar_grid(netlist, gate_locations, grid)
-    for x in copy_grid:
+    routes, final_grid = neighbours.astar_grid(netlist, gate_locations, grid)
+    
+    for x in final_grid:
         print('\n')
         for y in x:
             print(y)
