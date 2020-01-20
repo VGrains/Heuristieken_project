@@ -6,16 +6,17 @@ from codefiles.algoritmes import astar, relax
 if __name__ == '__main__':
     
     # Create a grid from our data
-    obj = grid.Grid('print_1.csv')
+    obj = grid.Grid('data/chip_1/print_1.csv')
     grid = obj.__repr__()
     
-    netlist = netlist.load_netlists('netlist_1.csv')
+    netlist = netlist.load_netlists('data/chip_1/netlist_1.csv')
     
     gate_locations = obj.gates
     
     print(gate_locations)
  
-    routes = astar.astar_grid(netlist, gate_locations, grid)
+    routes, copy_grid = astar.astar_grid(netlist, gate_locations, grid)
+    print(f"copy_grid: {copy_grid}")
     for x in copy_grid:
         print('\n')
         for y in x:
