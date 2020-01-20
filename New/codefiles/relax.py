@@ -1,3 +1,6 @@
+from classes import grid
+import copy
+
 class Node():
     """A node class for A* Pathfinding"""
 
@@ -12,6 +15,48 @@ class Node():
     def __eq__(self, other):
         return self.position == other.position
 
+
+def relax(netlist, gate_locations, grid):
+    final_routes = {}
+    
+    while len(final_routes) < 30:
+        copy_grid = copy.deepcopy(grid)
+        
+        for route in netlist:
+            # Get the coordinates from the dictionary with the locations of the chips
+            coordinates_base = gate_locations[route[0]]
+            coordinates_goal = gate_locations[route[1]]
+
+            # Set the start and end chips
+            start = (coordinates_base[0], coordinates_base[1], coordinates_base[2])
+            end = (coordinates_goal[0], coordinates_goal[1], coordinates_goal[2])
+
+            # Calculate a path using the A-star algoritm
+            path = astar(copy_grid, start, end)
+
+            if path == None:            
+                # Move the route that breaks the algorithm to the front of the routeslist
+
+                netlist.remove(route)
+                netlist.insert(0, route)
+                print("finished routes: ", len(final_routes))
+                final_routes.clear()
+                break
+    
+            # Adjust the grid for the current iterations route
+            for location in path:
+                # If the position in the grid is a letter, don't make it a '1'
+                if copy_grid[location[0]][location[1]][location[2]] != 0 and copy_grid[location[0]][location[1]][location[2]] != 1:
+                    continue
+
+                # Else change the zero to a '1'
+                else:
+                    copy_grid[location[0]][location[1]][location[2]] = 1
+
+            # Set the route as value in the final_routes dict, with the netlist as key
+            final_routes[route] = path
+            
+    return final_routes, copy_grid
 
 def astar(maze, start, end):
     """Returns a list of tuples as a path from the given start to the given end in the given maze"""
@@ -55,6 +100,7 @@ def astar(maze, start, end):
 
         # Generate children
         children = []
+        
         for new_position in [(0, 0, -1), (0, 0, 1), (0, -1, 0), (0, 1, 0), (1, 0, 0), (-1, 0, 0)]: # Adjacent squares
             
             # Get node position
@@ -65,16 +111,16 @@ def astar(maze, start, end):
                 continue
             
  
-            # Make sure walkable terrain
-            if node_position == end_node.position:
-                new_node = Node(current_node, node_position)
-            
-                # Append
-                children.append(new_node)
-                continue
-            
-            if maze[node_position[0]][node_position[1]][node_position[2]] != 0:
-                continue
+            # # Make sure walkable terrain
+ #            if node_position == end_node.position:
+ #                new_node = Node(current_node, node_position)
+ #
+ #                # Append
+ #                children.append(new_node)
+ #                continue
+ #
+            # if maze[node_position[0]][node_position[1]][node_position[2]] != 0:
+#                 continue
 
             # Create new node
             new_node = Node(current_node, node_position)
@@ -105,39 +151,3 @@ def astar(maze, start, end):
                     # Add the child to the open list
                     open_list.append(child)
             
-
-
-def main():
-
-    maze = [[[0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [1, 1, 1, 1, 1, 1, 1],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0]],
-            [[0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [1, 1, 1, 1, 1, 1, 1],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0]],
-            [[0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0]]]
-
-    start = (0, 1, 5)
-    end = (0, 6, 5)
-
-    path = astar(maze, start, end)
-    print(path)
-
-
-
-if __name__ == '__main__':
-    main()
