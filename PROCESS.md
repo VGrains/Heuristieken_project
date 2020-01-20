@@ -56,3 +56,30 @@
 <b> Woensdag 15 januari 2020 </b>
 - Een begin gemaakt aan het herschrijven van de code in classes en functies.
 - Functies geschreven voor het schrijven van outputfiles.
+
+<b> Donderdag 16 januari 2020 </b>
+- Wederom code geherstructureerd doordat er in de vorige structuur functies in zichzelf werden aangeroepen. 
+- Explorerend onderzoek gedaan naar het toepassen van een hillclimber binnenin een A* algoritme
+
+<b> Vrijdag 17 januari 2020 </b>
+- Bug in de ideal score gefixt
+- Begin gemaakt aan constraint relaxation algoritme
+- Nieuwe structuur code werkt volledig. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
