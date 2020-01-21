@@ -123,7 +123,7 @@ def astar(maze, start, end):
             add_cost = 0
             
             if maze[node_position[0]][node_position[1]][node_position[2]] == 'x':
-                add_cost = 5
+                add_cost = 1
             elif maze[node_position[0]][node_position[1]][node_position[2]] != 0:
                 add_cost = 0
                 continue
