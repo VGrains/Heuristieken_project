@@ -21,7 +21,7 @@ class Grid():
             lengths_y = []
             
             for location in gate_locations:
-                self.gates[location[0]] = (0, int(location[1]), int(location[2]))
+                self.gates[location[0]] = [0, int(location[1]), int(location[2])]
                 lengths_x.append(int(location[1]))
                 lengths_y.append(int(location[2]))
                 
@@ -46,4 +46,4 @@ class Grid():
 
 
     def __repr__(self):
-        return self.grid
+        return self.grid 

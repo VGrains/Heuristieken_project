@@ -53,10 +53,7 @@ def astar_grid(netlist, gate_locations, grid):
 
             # Set the route as value in the final_routes dict, with the netlist as key
             final_routes[route] = path
-            
-                
-            
-            
+                  
     return final_routes, copy_grid
 
 def astar(maze, start, end):
@@ -123,7 +120,7 @@ def astar(maze, start, end):
             add_cost = 0
             
             if maze[node_position[0]][node_position[1]][node_position[2]] == 'x':
-                add_cost = 1
+                add_cost = 5
             elif maze[node_position[0]][node_position[1]][node_position[2]] != 0:
                 add_cost = 0
                 continue
