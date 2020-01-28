@@ -99,13 +99,12 @@ def get_variables(algorithm):
         variable_1 = validate_input(10)
         algorithm['variable_1'] = variable_1
     
-    if algorithm['option'] == "neighbours":
+    if algorithm['option'] == "neighbours" or algorithm['option'] == "upstairs neighbours":
         print("For neighbours you need to enter a cost value for the neighbours. Enter a positive integer between 1 and 10! \n")
         variable_1 = validate_input(10)
         algorithm['variable_1'] = variable_1
 
-    if algorithm['option'] == "upstairs neighbours" or algorithm['option'] == "extended neighbours" or \
-        algorithm['option'] == "extended upstairs neighbours":
+    if algorithm['option'] == "extended neighbours" or algorithm['option'] == "extended upstairs neighbours":
         print("\nFor this variation you need to enter two values. The first is for the direct neighbours.")
         variable_1 = validate_input(9999)
         print("\nThe second is for the extended neighbours.")
