@@ -1,74 +1,54 @@
-
-from codefiles.classes import grid, grid_mod
-from codefiles.functions import netlist, manhattan, plot, collisions, md_sorting
-from codefiles.algoritmes import astar, relax, neighbours
+from codefiles.classes.grid import *
+from codefiles.functions import netlist, manhattan, plot, collisions, collisions_route, initialize_algorithm, initialize_grid, initialize_netlist
+from codefiles.algoritmes.good_astar import astar_grid
 from codefiles.functions.csvwriter import *
+from codefiles.algoritmes.elevator import astar_elevator
+
 import timeit
 
 
 if __name__ == '__main__':
     
+    # Initialize all the settings for the algorithm
+    algorithm, netlist, obj = initialize_algorithm.initialize_algorithm()
+    
+    # Get grid object and gate locations
+    grid, gate_locations = initialize_grid.initialize_grid(algorithm, netlist, obj)
+    
+    # Get the netlist sorted correctly
+    netlist = initialize_netlist.initialize_netlist(algorithm, netlist, gate_locations, grid)
+    
+    # Start the time
     start = timeit.default_timer()
     
-    # Create a grid from our data
-    obj = grid_mod.Grid_mod('data/chip_1/print_1.csv')
-    # obj = grid.Grid('data/chip_1/print_1.csv')
-
-    grid = obj.__repr__()
+    # Run the A* algorithm
+    if algorithm['option'] == "elevator":
+        routes, final_grid = astar_elevator(netlist, gate_locations, grid)
+    else:
+        routes, final_grid = astar_grid(netlist, gate_locations, grid, algorithm)
+        
     
-    # netlist = netlist.load_netlists('data/chip_1/chip_1_netlist_1_succes.csv')
-    netlist = netlist.load_netlists('data/chip_1/netlist_2.csv')
-
-    
-    gate_locations = obj.gates
-
-
-    routes, final_grid = relax.relax(netlist, gate_locations, grid)
-    # routes, final_grid = neighbours.astar_grid(netlist, gate_locations, grid)
-     
-    ideal_score = sum(manhattan.manhattan_distance(gate_locations[route[0]][1], gate_locations[route[1]][1], gate_locations[route[0]][2], gate_locations[route[1]][2]) for route in netlist)
-    current_score = sum(len(routes[route]) -1 for route in routes)    
+    # Get the final statistics to inform the user
     stop = timeit.default_timer()
+    ideal_score = sum(manhattan.manhattan_distance(gate_locations[route[0]][1], gate_locations[route[1]][1], \
+                     gate_locations[route[0]][2], gate_locations[route[1]][2]) for route in netlist)    
+    current_score = sum(len(routes[route]) -1 for route in routes)
     
-    csv_writer_tuplelist(netlist)
-    csv_writer_finalroutes(routes)
-    collisions_dict = collisions.calculate_collisions(routes, gate_locations)
-    total = collisions.total_collisions(collisions_dict)
-
-
-    collisions_dict = collisions.calculate_collisions(routes, gate_locations)
-    total = collisions.total_collisions(collisions_dict)
+    
+    # Ask user whether he wants to create output csv files
+    output = input("\nWould you like to save the succesful netlist order and the created wires? Type 'y' or 'n': ")
+    if output == "y":
+        csv_writer_tuplelist(netlist)
+        csv_writer_finalroutes(routes)
+    
+    # Print statistics
+    print("\nThank you for running this code package! The statistics are:")
     print("Ideal: ", ideal_score)
     print("Current: ", current_score)
     print('Runtime: ', stop - start)
-    print('Collisions: ', total)
-    print('Collisions: ', collisions)
     
-    for route in collisions_dict:
-        if route not in gate_locations.values():
-            grid[route[0]][route[1]][route[2]] = collisions_dict[route]
-
-
-
-
-    for x in grid:
-        print('\n')
-        for y in x:
-            print(y)
-
-
-
-
-
-
-
-
-
-    
-    
-    # new_routes = routes
-
-    # plot.plot_3dgraph(gate_locations, new_routes)
+    # Plot the 3D graph
+    plot.plot_3dgraph(gate_locations, routes)
     
 
     

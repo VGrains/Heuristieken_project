@@ -19,11 +19,13 @@ class Node():
 def relax(netlist, gate_locations, grid):
     final_routes = {}
     
-    while len(final_routes) < 30:
+    while len(final_routes) < len(netlist):
         copy_grid = copy.deepcopy(grid)
+        
         
         for route in netlist:
             # Get the coordinates from the dictionary with the locations of the chips
+            
             coordinates_base = gate_locations[route[0]]
             coordinates_goal = gate_locations[route[1]]
 
