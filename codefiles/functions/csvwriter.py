@@ -4,7 +4,7 @@ import csv
 def csv_writer_tuplelist(tuplelist):
     # Ask user for an output filename.
     outfile = input("Enter filename for tuplelist output: ")
-    outfile = "{}.csv".format(outfile)
+    outfile = "resultaten/{}.csv".format(outfile)
     
     # Creates a csv-file with the final netlist.
     with open(outfile, 'w', newline='') as file:
@@ -17,15 +17,14 @@ def csv_writer_tuplelist(tuplelist):
 def csv_writer_finalroutes(final_routes):
     # Ask user for an output filename.
     outfile = input("Enter filename for wires output: ")
-    outfile = "{}.csv".format(outfile)
+    outfile = "resultaten/{}.csv".format(outfile)
     
     # Creates a csv-file with the created routes.
     with open(outfile, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([str("net, wires")])
         for route in final_routes:
-            print(f"str(route) + str(final_routes[route]: {str(route) + str(final_routes[route])})")
-            writer.writerow([str(route) + str(": ") + str(final_routes[route])])
+            writer.writerow([str(route) + str(', "') + str(final_routes[route]) + str('"')])
 
 
     
